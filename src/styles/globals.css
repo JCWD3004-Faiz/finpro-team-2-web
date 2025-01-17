@@ -1,0 +1,190 @@
+/* globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Parkinsans', Arial, Helvetica, sans-serif; /* Use Parkinsans font */
+}
+
+/* Custom class for sliding the white box */
+.translate-x-negative {
+  transform: translateX(-100%);
+}
+
+.transition-transform {
+  transition: transform 0.5s ease;
+}
+
+.translate-x-positive {
+  transform: translateX(43%);
+}
+
+/* Smooth alignment transitions */
+.transition-all {
+  transition: all 0.5s ease;
+}
+
+/* Smooth opacity transitions */
+.opacity-transition {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee {
+  display: inline-block;
+  animation: marquee 70s linear infinite;
+}
+
+.transition-all {
+  transition: all 0.5s ease-in-out;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.group:hover {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.swiper-scrollbar {
+  width: 100%; /* Full width of the Swiper container */
+  height: 8px; /* Adjust height for visibility */
+  background-color: #e0e0e0; /* Track color */
+  border-radius: 4px; /* Rounded edges for track */
+  margin-top: 10px; /* Spacing from Swiper content */
+}
+
+.swiper-scrollbar-drag {
+  background-color: #000; /* Handle color */
+  border-radius: 4px; /* Rounded edges for handle */
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: black;
+  color: white;
+}
+
+/* Slide animation for the white section */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.slide-left {
+  animation: slide-left 1s forwards;
+}
+
+/* Fade animation for the contents */
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fade-out 0.5s forwards;
+}
+
+
+
