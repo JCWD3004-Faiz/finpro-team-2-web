@@ -130,7 +130,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
     }
   };
 
-  console.log("discount applied", isDiscountApplied);
+  const voucherTypeMap: { [key: string]: string } = { "PRODUCT_DISCOUNT": "Product", "CART_DISCOUNT": "Cart", "SHIPPING_DISCOUNT": "Shipping" };
 
   return (
     <>
@@ -332,7 +332,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                           key={voucher.redeem_code}
                           value={JSON.stringify(voucher)}
                         >
-                          {voucher.redeem_code} - {voucher.voucher_type}
+                          {voucher.redeem_code} - {voucherTypeMap[voucher.voucher_type]}
                           <label className="ml-4 text-muted-foreground">
                             {voucher.discount_type === "PERCENTAGE"
                               ? `${voucher.discount_amount}% OFF`

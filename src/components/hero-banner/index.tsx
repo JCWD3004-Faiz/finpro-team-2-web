@@ -19,10 +19,7 @@ const HeroBanner: React.FC = () => {
   const { allUserDiscounts } = useSelector(
     (state: RootState) => state.userDiscounts
   );
-  const { closestStore } = useSelector((state: RootState) => state.landing);
-
-  console.log("all discounts", allUserDiscounts)
-  
+  const { closestStore } = useSelector((state: RootState) => state.landing);  
 
   useEffect(() => {
     dispatch(fetchDiscountsByStoreId(current_store_id));

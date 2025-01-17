@@ -27,8 +27,6 @@ function CreateDiscount() {
     dispatch({ type: "storeAdmin/toggleSidebar" });
   };
 
-  console.log("storeId", storeId);
-
   return (
     <div className="bg-slate-100 w-screen min-h-screen text-gray-800">
       <StoreSidebar
