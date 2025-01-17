@@ -117,7 +117,6 @@ export const fetchAllCategories = createAsyncThunk(
       const response = await axios.get(`/api/users/categories`, {
         headers: { Authorization: `Bearer ${access_token}` },
       });
-      console.log("response",response)
       return response.data.data; // Assuming the API returns an array of category names
     } catch (error) {
       if (axioss.isAxiosError(error) && error.response) {
@@ -207,7 +206,6 @@ const getProductsSlice = createSlice({
         fetchAllCategories.fulfilled,
         (state, action: PayloadAction<string[]>) => {
           state.loading = false;
-          console.log("payload", action.payload)
           state.categories = action.payload; // Update categories state
         }
       )
