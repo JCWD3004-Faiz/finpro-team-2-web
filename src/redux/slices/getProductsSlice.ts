@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "@/utils/interceptor";
-import axioss, { AxiosError, isAxiosError } from "axios";
+import axioss, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import {
   getProductsState,
@@ -40,10 +40,12 @@ const initialState: getProductsState = {
   sortOrder: "asc",
   search: "",
   category: "",
+  categories: [], // Added categories state
   loading: false,
   error: null,
 };
 
+// Fetch product details by inventory ID
 export const fetchProductDetailsByInventoryId = createAsyncThunk(
   "products/fetchProductDetailsByInventoryId",
   async (inventoryId: number, { rejectWithValue }) => {
@@ -54,7 +56,7 @@ export const fetchProductDetailsByInventoryId = createAsyncThunk(
       if (response.status !== 201) {
         throw new Error("Failed to fetch product details.");
       }
-      return response.data.inventory; // Ensure this aligns with your API response structure
+      return response.data.inventory;
     } catch (error) {
       if (axioss.isAxiosError(error) && error.response) {
         return rejectWithValue(
@@ -66,11 +68,11 @@ export const fetchProductDetailsByInventoryId = createAsyncThunk(
   }
 );
 
+// Fetch paginated inventories
 export const fetchInventoriesUser = createAsyncThunk(
   "inventories/fetchInventoriesUser",
   async (
     {
-      //storeId,
       page = 1,
       pageSize = 10,
       search = "",
@@ -79,7 +81,6 @@ export const fetchInventoriesUser = createAsyncThunk(
       sortOrder = "asc",
       store_id = 28
     }: {
-      //storeId: number;
       page?: number;
       pageSize?: number;
       search?: string;
@@ -100,13 +101,32 @@ export const fetchInventoriesUser = createAsyncThunk(
 
       return response?.data?.inventories; // Adjust to match your API response structure
     } catch (error) {
-      if (error instanceof AxiosError && error.response) {
+      if (axioss.isAxiosError(error) && error.response) {
         return rejectWithValue(
           error?.response?.data?.message || "Failed to fetch inventories."
         );
-      } else {
-        return rejectWithValue("An unexpected error occurred.");
       }
+      return rejectWithValue("An unexpected error occurred.");
+    }
+  }
+);
+
+// Fetch all categories
+export const fetchAllCategories = createAsyncThunk(
+  "products/fetchAllCategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/users/categories`, {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+      return response.data.data; // Assuming the API returns an array of category names
+    } catch (error) {
+      if (axioss.isAxiosError(error) && error.response) {
+        return rejectWithValue(
+          error.response.data.message || "Failed to fetch categories."
+        );
+      }
+      return rejectWithValue("An unexpected error occurred.");
     }
   }
 );
@@ -133,6 +153,7 @@ const getProductsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch product details
       .addCase(fetchProductDetailsByInventoryId.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -148,9 +169,10 @@ const getProductsSlice = createSlice({
         fetchProductDetailsByInventoryId.rejected,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
-          state.error = action.payload || "Failed to fetch product details."; // Set the error message
+          state.error = action.payload || "Failed to fetch product details.";
         }
       )
+      // Fetch inventories
       .addCase(fetchInventoriesUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -167,15 +189,31 @@ const getProductsSlice = createSlice({
           }>
         ) => {
           state.loading = false;
-          state.productAllUser = action.payload.data; // Update the fetched inventories
-          state.currentPage = action.payload.currentPage; // Update current page
-          state.totalPages = action.payload.totalPages; // Update total pages
-          state.totalItems = action.payload.totalItems; // Update total items
+          state.productAllUser = action.payload.data;
+          state.currentPage = action.payload.currentPage;
+          state.totalPages = action.payload.totalPages;
+          state.totalItems = action.payload.totalItems;
         }
       )
       .addCase(fetchInventoriesUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload || "Failed to fetch inventories."; // Set the error message
+        state.error = action.payload || "Failed to fetch inventories.";
+      })
+      // Fetch all categories
+      .addCase(fetchAllCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchAllCategories.fulfilled,
+        (state, action: PayloadAction<string[]>) => {
+          state.loading = false;
+          state.categories = action.payload; // Update categories state
+        }
+      )
+      .addCase(fetchAllCategories.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch categories.";
       });
   },
 });
@@ -186,5 +224,6 @@ export const {
   setSortOrder,
   setSearch,
   setCategory,
-} = getProductsSlice.actions
+} = getProductsSlice.actions;
 export default getProductsSlice.reducer;
+

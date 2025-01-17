@@ -6,13 +6,14 @@ import { fetchInventoriesUser } from "@/redux/slices/getProductsSlice";
 import { fetchDiscountsByStoreId } from "@/redux/slices/userDiscountSlice";
 import ProductCardLatest from "../components/product-card-latest";
 import FruggerMarquee from "../components/frugger-marquee"; // Import FruggerMarquee component
-import { Swiper, SwiperSlide } from "swiper/react"; // Import Swiper components
-import "swiper/css"; // Import Swiper styles
-import "swiper/css/free-mode"; // Import FreeMode styles
-import { FreeMode } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/scrollbar";
+import { FreeMode, Scrollbar, Keyboard } from "swiper/modules";
 import Cookies from "js-cookie";
 
-const HeroBanner = dynamic(() => import('../components/hero-banner'), { ssr: false });
+const HeroBanner = dynamic(() => import("../components/hero-banner"), { ssr: false });
 
 const Home: React.FC = () => {
   const current_store_id = Number(Cookies.get("current_store_id"));
@@ -51,6 +52,9 @@ const Home: React.FC = () => {
     return groups;
   }, {} as Record<string, typeof productAllUser>);
 
+  // Get the first four categories
+  const limitedCategories = Object.keys(groupedProducts).slice(0, 4);
+
   return (
     <div className="flex flex-col mt-[11vh]">
       {/* Hero Banner */}
@@ -66,17 +70,29 @@ const Home: React.FC = () => {
         {loading ? (
           <div>Loading...</div> // You can replace this with a loading component if needed
         ) : (
-          Object.keys(groupedProducts).map((category) => (
+          limitedCategories.map((category) => (
             <div key={category} className="mb-12">
-              {/* Category Title */}
-              <h2 className="text-5xl font-bold mb-6">{category}</h2>
+              {/* Category Title with Link */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">{category}</h2>
+                <a href="/products-page" className="text-black text-lg sm:text-2xl">More</a>
+              </div>
 
               {/* Swiper for the current category */}
               <Swiper
                 spaceBetween={20}
                 slidesPerView={"auto"}
                 freeMode={true}
-                modules={[FreeMode]}
+                scrollbar={{
+                  draggable: true,
+                  el: `.swiper-scrollbar-${category}`,
+                  hide: false,
+                }}
+                keyboard={{
+                  enabled: true,
+                  onlyInViewport: true,
+                }}
+                modules={[FreeMode, Scrollbar, Keyboard]}
                 className="category-swiper"
               >
                 {groupedProducts[category].map((product) => (
@@ -104,6 +120,8 @@ const Home: React.FC = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+              {/* Custom scrollbar positioned below with some spacing */}
+              <div className={`w-full h-[1vh] mt-2 swiper-scrollbar-${category}`} />
             </div>
           ))
         )}

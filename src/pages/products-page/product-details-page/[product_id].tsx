@@ -124,7 +124,7 @@ function SingleProductPage() {
                 key={index}
                 src={image.product_image}
                 alt={`Thumbnail ${index}`}
-                className="w-[80px] h-[80px] object-cover cursor-pointer border"
+                className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] object-cover cursor-pointer border"
                 onClick={() => handleImageSelect(image.product_image)}
               />
             ))}
